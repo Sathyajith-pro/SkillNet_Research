@@ -21,14 +21,14 @@ import {
   Divider,
 } from "@mui/material";
 
-
+//dashboard layout component
 type DashboardLayoutProps = {
   title: string;
   info: { [key: string]: string | number };
   panelName: string;
   formFields: { name: string; label: string; type?: string }[];
 };
-
+//dashboard layout component
 export default function DashboardLayout({
   title,
   info,
@@ -51,7 +51,7 @@ export default function DashboardLayout({
     setNewItem({});
     setOpenCreate(false);
   };
-
+// Update existing item
   const handleUpdate = () => {
     if (openDetails === null) return;
     const updated = [...items];
