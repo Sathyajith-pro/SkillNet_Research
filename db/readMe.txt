@@ -1,0 +1,1 @@
+create user 'skillnet'@'localhost' identified by 'Password@123';
