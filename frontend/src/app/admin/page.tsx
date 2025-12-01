@@ -18,6 +18,7 @@ import {
   Chip,
 } from "@mui/material";
 
+//add types and interfaces
 type User = {
   id: number;
   name: string;
