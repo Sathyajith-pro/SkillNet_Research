@@ -1,5 +1,5 @@
 import express, { Application, Request, Response } from "express";
-
+//create sme backend routes
 const app: Application = express();
 const PORT = process.env.PORT || 5001;
 
