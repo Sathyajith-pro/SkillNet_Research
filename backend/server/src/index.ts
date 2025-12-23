@@ -10,6 +10,7 @@ app.get("/api/hello", (req: Request, res: Response) => {
   res.json({ message: "Hello from Express + TypeScript!" });
 });
 
+//create endpoint
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
