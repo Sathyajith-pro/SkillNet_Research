@@ -25,7 +25,8 @@
     // Source maps for debugging
     "sourceMap": true,
     
-    // Generate declaration files for TypeScript types
+    
+    // Generate declaration files for TypeScript type
     "declaration": true,
     "declarationMap": true,
     
