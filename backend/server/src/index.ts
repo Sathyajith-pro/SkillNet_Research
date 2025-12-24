@@ -2,7 +2,7 @@ import express, { Application, Request, Response } from "express";
 
 const app: Application = express();
 const PORT = process.env.PORT || 5001;
-
+//update routes for recruitment system
 app.use(express.json());
 
 // Sample route

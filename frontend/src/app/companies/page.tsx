@@ -1,5 +1,5 @@
 import DashboardLayout from "@/components/DashboardLayout";
-
+//create frontend for companies
 export default function CompanyDashboard() {
   return (
     <DashboardLayout
