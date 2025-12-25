@@ -5,7 +5,7 @@ const app = express();
 const PORT = 5000;
 
 app.use(express.json());
-
+// Simple API Gateway implementation
 // Example proxy route
 app.get("/api/hello", async (req: Request, res: Response) => {
   try {

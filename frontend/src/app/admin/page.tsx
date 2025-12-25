@@ -16,8 +16,13 @@ import {
   DialogActions,
   TextField,
   Chip,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 
+//add types and interfaces
 type User = {
   id: number;
   name: string;
@@ -64,10 +69,19 @@ export default function AdminDashboard() {
   const [openEdit, setOpenEdit] = useState(false);
   const [editItem, setEditItem] = useState<any>(null);
   const [editType, setEditType] = useState<"user" | "team" | "project">();
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAdd = (type: "user" | "team" | "project") => {
+    setEditType(type);
+    setIsAdding(true);
+    setEditItem(type === "user" ? { name: "", email: "", role: "student" } : { name: "" });
+    setOpenEdit(true);
+  };
 
   const handleEdit = (item: any, type: "user" | "team" | "project") => {
     setEditItem(item);
     setEditType(type);
+    setIsAdding(false);
     setOpenEdit(true);
   };
 
@@ -78,20 +92,56 @@ export default function AdminDashboard() {
   };
 
   const handleSave = () => {
-    if (editType === "user") {
-      setUsers(users.map(u => u.id === editItem.id ? editItem : u));
-    } else if (editType === "team") {
-      setTeams(teams.map(t => t.id === editItem.id ? editItem : t));
-    } else if (editType === "project") {
-      setProjects(projects.map(p => p.id === editItem.id ? editItem : p));
+    if (isAdding) {
+      if (editType === "user") {
+        const newUser: User = { ...editItem, id: Math.max(...users.map(u => u.id)) + 1 };
+        setUsers([...users, newUser]);
+      } else if (editType === "team") {
+        const newTeam: Team = { ...editItem, id: Math.max(...teams.map(t => t.id)) + 1, members: [] };
+        setTeams([...teams, newTeam]);
+      } else if (editType === "project") {
+        const newProject: Project = { ...editItem, id: Math.max(...projects.map(p => p.id)) + 1, owner: "" };
+        setProjects([...projects, newProject]);
+      }
+    } else {
+      if (editType === "user") {
+        setUsers(users.map(u => u.id === editItem.id ? editItem : u));
+      } else if (editType === "team") {
+        setTeams(teams.map(t => t.id === editItem.id ? editItem : t));
+      } else if (editType === "project") {
+        setProjects(projects.map(p => p.id === editItem.id ? editItem : p));
+      }
     }
     setOpenEdit(false);
     setEditItem(null);
+    setIsAdding(false);
   };
 
   return (
     <main className="min-h-screen p-8 bg-gray-50">
       <h1 className="text-4xl font-bold mb-6 text-center">Admin Dashboard</h1>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <Card>
+          <CardContent>
+            <Typography variant="h5">Total Users</Typography>
+            <Typography variant="h3">{users.length}</Typography>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent>
+            <Typography variant="h5">Total Teams</Typography>
+            <Typography variant="h3">{teams.length}</Typography>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent>
+            <Typography variant="h5">Total Projects</Typography>
+            <Typography variant="h3">{projects.length}</Typography>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Tabs */}
       <Tabs value={tabIndex} onChange={(_, value) => setTabIndex(value)} centered className="mb-6">
@@ -102,65 +152,74 @@ export default function AdminDashboard() {
 
       {/* Users Tab */}
       {tabIndex === 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {users.map(user => (
-            <Card key={user.id}>
-              <CardContent className="flex items-center space-x-4">
-                {user.avatar && <Avatar src={user.avatar} />}
-                <div>
-                  <Typography variant="h6">{user.name}</Typography>
-                  <Typography variant="body2">{user.email}</Typography>
-                  <Chip label={user.role} size="small" className="mt-1" />
-                </div>
-              </CardContent>
-              <CardActions>
-                <Button size="small" onClick={() => handleEdit(user, "user")}>Edit</Button>
-                <Button size="small" color="error" onClick={() => handleDelete(user.id, "user")}>Delete</Button>
-              </CardActions>
-            </Card>
-          ))}
-        </div>
+        <>
+          <Button variant="contained" onClick={() => handleAdd("user")} className="mb-4">Add New User</Button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {users.map(user => (
+              <Card key={user.id}>
+                <CardContent className="flex items-center space-x-4">
+                  {user.avatar && <Avatar src={user.avatar} />}
+                  <div>
+                    <Typography variant="h6">{user.name}</Typography>
+                    <Typography variant="body2">{user.email}</Typography>
+                    <Chip label={user.role} size="small" className="mt-1" />
+                  </div>
+                </CardContent>
+                <CardActions>
+                  <Button size="small" onClick={() => handleEdit(user, "user")}>Edit</Button>
+                  <Button size="small" color="error" onClick={() => handleDelete(user.id, "user")}>Delete</Button>
+                </CardActions>
+              </Card>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Teams Tab */}
       {tabIndex === 1 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {teams.map(team => (
-            <Card key={team.id}>
-              <CardContent>
-                <Typography variant="h6">{team.name}</Typography>
-                <Typography variant="body2">Members: {team.members.join(", ")}</Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small" onClick={() => handleEdit(team, "team")}>Edit</Button>
-                <Button size="small" color="error" onClick={() => handleDelete(team.id, "team")}>Delete</Button>
-              </CardActions>
-            </Card>
-          ))}
-        </div>
+        <>
+          <Button variant="contained" onClick={() => handleAdd("team")} className="mb-4">Add New Team</Button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {teams.map(team => (
+              <Card key={team.id}>
+                <CardContent>
+                  <Typography variant="h6">{team.name}</Typography>
+                  <Typography variant="body2">Members: {team.members.join(", ")}</Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small" onClick={() => handleEdit(team, "team")}>Edit</Button>
+                  <Button size="small" color="error" onClick={() => handleDelete(team.id, "team")}>Delete</Button>
+                </CardActions>
+              </Card>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Projects Tab */}
       {tabIndex === 2 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {projects.map(project => (
-            <Card key={project.id}>
-              <CardContent>
-                <Typography variant="h6">{project.name}</Typography>
-                <Typography variant="body2">Owner: {project.owner}</Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small" onClick={() => handleEdit(project, "project")}>Edit</Button>
-                <Button size="small" color="error" onClick={() => handleDelete(project.id, "project")}>Delete</Button>
-              </CardActions>
-            </Card>
-          ))}
-        </div>
+        <>
+          <Button variant="contained" onClick={() => handleAdd("project")} className="mb-4">Add New Project</Button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {projects.map(project => (
+              <Card key={project.id}>
+                <CardContent>
+                  <Typography variant="h6">{project.name}</Typography>
+                  <Typography variant="body2">Owner: {project.owner}</Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small" onClick={() => handleEdit(project, "project")}>Edit</Button>
+                  <Button size="small" color="error" onClick={() => handleDelete(project.id, "project")}>Delete</Button>
+                </CardActions>
+              </Card>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Edit Dialog */}
       <Dialog open={openEdit} onClose={() => setOpenEdit(false)}>
-        <DialogTitle>Edit {editType}</DialogTitle>
+        <DialogTitle>{isAdding ? `Add New ${editType}` : `Edit ${editType}`}</DialogTitle>
         <DialogContent className="space-y-4">
           {editItem && editType === "user" && (
             <>
@@ -176,6 +235,18 @@ export default function AdminDashboard() {
                 value={editItem.email}
                 onChange={(e) => setEditItem({ ...editItem, email: e.target.value })}
               />
+              <FormControl fullWidth>
+                <InputLabel>Role</InputLabel>
+                <Select
+                  value={editItem.role}
+                  onChange={(e) => setEditItem({ ...editItem, role: e.target.value })}
+                  label="Role"
+                >
+                  <MenuItem value="student">Student</MenuItem>
+                  <MenuItem value="sme">SME</MenuItem>
+                  <MenuItem value="company">Company</MenuItem>
+                </Select>
+              </FormControl>
             </>
           )}
           {editItem && editType === "team" && (
