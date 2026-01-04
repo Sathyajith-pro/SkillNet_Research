@@ -39,6 +39,3 @@
   // Exclude node_modules and output folder
   "exclude": ["node_modules", "dist"]
 }
-
-//model development
-//retraining model for new data
