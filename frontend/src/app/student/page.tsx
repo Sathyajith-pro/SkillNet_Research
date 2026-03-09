@@ -413,6 +413,7 @@ const theme = createTheme({
     borderRadius: 12,
   },
 });
+import Link from "next/link";
 
 export default function StudentDashboard() {
   const [tabIndex, setTabIndex] = useState(0);

@@ -32,6 +32,8 @@ app.use((req, res, next) => {
 
 //-----------------------Test Routes--------------------------------
 // Proxy route for /api/hello
+// Simple API Gateway implementation
+// Example proxy route
 app.get("/api/hello", async (req: Request, res: Response) => {
   try {
     const response = await fetch(`${BACKEND_BASE_URL}/api/hello`);
