@@ -34,7 +34,11 @@
   },
   
   // Include all TS files in src folder
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*",
+    "src/middleware/**/*"
+  ],
   
   // Exclude node_modules and output folder
   "exclude": ["node_modules", "dist"]
