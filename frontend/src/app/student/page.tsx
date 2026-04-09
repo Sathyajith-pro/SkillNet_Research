@@ -16,6 +16,7 @@ import {
   DialogActions,
   TextField,
 } from "@mui/material";
+import Link from "next/link";
 
 export default function StudentDashboard() {
   const [studentInfo, setStudentInfo] = useState({
@@ -81,9 +82,16 @@ export default function StudentDashboard() {
               <Typography variant="body2">{studentInfo.major} - {studentInfo.year}</Typography>
             </div>
           </div>
-          <Button variant="contained" color="primary" onClick={() => setOpenEdit(true)}>
-            Edit Profile
-          </Button>
+          <div className="flex space-x-2">
+            <Button variant="contained" color="primary" onClick={() => setOpenEdit(true)}>
+              Edit Profile
+            </Button>
+            <Link href="/student/profile">
+              <Button variant="outlined" color="primary">
+                View Full Profile
+              </Button>
+            </Link>
+          </div>
         </CardContent>
       </Card>
 
